@@ -357,7 +357,7 @@ This script helped to illustrate some of the methods that config scripts utilize
 **VIDEOLINK**
   
 
-![Scripts](https://xrdocs.github.io/xrdocs-images/assets/images/pickhardt-script-process.png)
+![Scripts](https://xrdocs.github.io/xrdocs-images/assets/images/pickhardt-script-process-2.png)
   
 ## Process Scripts
   
