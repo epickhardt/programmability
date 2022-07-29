@@ -220,21 +220,40 @@ def cb_fn_name(root):
 
 where `root` is the root node.
 
-This function retrieves specific nodes from the YANG model in order to check configuration status, including containers, leaves, and leaf-lists. In order to do this, we can use either the `<node>.get_node(path)` or `<node>.get_list(path)`. The first call of these functions should be called on the root node, which is passed to the callback function as an argument. Intuitively, `get_node` can be used to get leaf or container nodes, while `get_list` should be used to obtain leaf-list types. For each of these methods, the path is a specific instance of a YPath, called a data path. Unlike the schema path mentioned in the previous section, the keys of the path must be included to find a specific node or list. A data path matches the following skeleton: 
+This function retrieves specific nodes from the YANG model in order to check configuration status, including containers, leaves, lists, and leaf-lists. In order to do this, we can use either the `<node>.get_node(path)` or `<node>.get_list(path)`. 
 
 <div class="highlighter-rouge">
 <pre class="highlight">
 <code>
-"module-name:container/container2<mark>[key='value']</mark>/another-module:container<mark>[id=number]</mark>/leaf"
+curr_node = root.get_node("/module_name:container1/container2")
+</code>
+</pre>
+</div>
+
+The first call of these functions should be called on the root node, which is passed to the callback function as an argument. Intuitively, `get_node` can be used to get leaf or container nodes, while `get_list` should be used to obtain list or leaf-list types. For each of these methods, the path is a specific instance of a YPath, called a data path. Unlike the schema path mentioned in the previous section, the keys of the path must be included to find a specific node or list. A data path matches the following skeleton: 
+
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+"module-name:container/list1<mark>[key='value']</mark>/another-module:list2<mark>[id=number]</mark>/leaf"
 </code>
 </pre>
 </div>
 
 The only difference between the data and schema paths is that the required key-value pairs are specified in the data path, while a schema path excludes them.
 
-Key values should be surrounded by single quotes (key='value') except when the data type is an integer (id=number).
+Key values should be surrounded by single or double quotes (`key = 'value'`) except when the data type is an integer (`id = number`) or boolean literal (`shutdown = False`).
 
-If the node retrieved is a leaf node, you can use the `.value` attribute to retrieve the associated data. Meanwhile, leaf-lists can be iterated through to get the leaf nodes within them. 
+If the node retrieved is a leaf node, you can use the `.value` attribute to retrieve the associated data. 
+<div class="highlighter-rouge">
+<pre class="highlight">
+<code>
+curr_node_value = curr_node.value
+</code>
+</pre>
+</div>
+
+Lists and leaf-lists can be iterated through to get the data within them; lists can contain any type of YANG node, while leaf-lists contain leaf nodes only.
 
 After the relevant data has been retrieved from the models, the necessary validation can occur. If the current configuration data doesn't comply with the script's standards, there are a few venues available to the script writer to correct the discrepancies. The first route to take is to generate warnings or errors in the syslog.
 
@@ -336,7 +355,7 @@ Finally, we iterate through the list of nodes to see if there is an ACL within t
 <code>
 	if acl_name in [x.value for x in acl]:
 		syslog.info("ACL found")
-    else:
+    	else:
 		syslog.error("ACL not found")
 </code>
 </pre>
@@ -357,7 +376,7 @@ This script helped to illustrate some of the methods that config scripts utilize
 **VIDEOLINK**
   
 
-![Scripts](https://xrdocs.github.io/xrdocs-images/assets/images/pickhardt-script-process-2.png)
+![Scripts](https://xrdocs.github.io/xrdocs-images/assets/images/pickhardt-script-process.png)
   
 ## Process Scripts
   
